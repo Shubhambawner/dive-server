@@ -30,7 +30,7 @@ const {
 router.get(
   '/',
   requireAuth,
-  roleAuthorization(['user', 'admin']),
+  roleAuthorization(['visitor','user', 'admin']),
   trimRequest.all,
   getProfile
 )
@@ -41,7 +41,7 @@ router.get(
 router.patch(
   '/',
   requireAuth,
-  roleAuthorization(['user', 'admin']),
+  roleAuthorization(['visitor','user', 'admin']),
   trimRequest.all,
   validateUpdateProfile,
   updateProfile
@@ -53,7 +53,7 @@ router.patch(
 router.post(
   '/changePassword',
   requireAuth,
-  roleAuthorization(['user', 'admin']),
+  roleAuthorization(['visitor','user', 'admin']),
   trimRequest.all,
   validateChangePassword,
   changePassword
