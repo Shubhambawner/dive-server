@@ -1,6 +1,7 @@
-document.querySelector("button#login").onclick = async function () {
-  let email = document.querySelector(".login-form #email").value
-  let password = document.querySelector(".login-form #password").value
+document.querySelector("button#register").onclick = async function () {
+  let email = document.querySelector(".register-form #email").value
+  let password = document.querySelector(".register-form #password").value
+  let name = document.querySelector(".register-form #name").value
   console.log(email, password);
 
   var myHeaders = new Headers();
@@ -9,6 +10,7 @@ document.querySelector("button#login").onclick = async function () {
   var urlencoded = new URLSearchParams();
   urlencoded.append("email", email);
   urlencoded.append("password", password);
+  urlencoded.append("name", name);
 
   var requestOptions = {
     method: 'POST',
@@ -20,7 +22,7 @@ document.querySelector("button#login").onclick = async function () {
   let url_prod = "https://dive-server.shubhambawner.repl.co/"
   let url_dev = "http://localhost:3000/"
 
-  fetch(url_dev + 'login', requestOptions)
+  fetch(url_dev + 'register', requestOptions)
     .then(response => response.json())
     .then(result => {
       console.log(result);

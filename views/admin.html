@@ -1,12 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dive admin</title>
+  <link rel="stylesheet" href="./../css/admin.css" />
 </head>
+
 <body>
-  hello admin
+  <h1>Welcome Admin</h1>
+  <button id="logout">Log out</button>
+  <table id="dataTable">
+    <thead>
+      <tr>
+        <th>name</th>
+        <th>email</th>
+        <th>createdAt</th>
+        <th>role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Table data will be added here dynamically -->
+      <th colspan="5" rowspan="5">
+        loding data...
+      </th>
+    </tbody>
+  </table>
+  <button id="prevButton" disabled>&lt; Prev</button>
+  <button id="nextButton" disabled>Next &gt;</button>
+
+
+  <script src="./../js/admin.js"></script>
 </body>
+
 </html>

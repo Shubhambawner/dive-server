@@ -15,20 +15,18 @@ router.get('/', (req, res) => {
 router.get('/login', (req, res) => {
   res.render('login')
 })
-router.get('/ragister', (req, res) => {
-  res.render('ragister')
+router.get('/register', (req, res) => {
+  res.render('register')
 })
 
 /*
  * Setup routes for index
  */
 router.get('/admin', (req, res) => {
-  console.log(req.user);
-  if(req.user?.role=='admin'){
     res.render('admin')
-  }else{
-    res.redirect('/pages/login')
-  }
+})
+router.get('/profile', (req, res) => {
+    res.render('profile')
 })
 
 
