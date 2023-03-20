@@ -7,7 +7,7 @@ const { itemNotFound } = require('../../../middleware/utils')
  */
 const getProfileFromDB = (id = '') => {
   return new Promise((resolve, reject) => {
-    User.findById(id, '-_id -updatedAt -createdAt', async (err, user) => {
+    User.findById(id, '-_id -updatedAt -createdAt -connections', async (err, user) => {
       try {
         await itemNotFound(err, user, 'NOT_FOUND')
         resolve(user)
