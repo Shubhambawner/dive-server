@@ -74,7 +74,13 @@ const UserSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
       select: false
-    }
+    },
+    connections:[{
+      //todo: need validation for if the user exists or not!
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    }]
   },
   {
     versionKey: false,

@@ -12,12 +12,15 @@ const { roleAuthorization } = require('../controllers/auth')
 const {
   getProfile,
   updateProfile,
-  changePassword
+  changePassword,
+  addConnection,
+  getConnections
 } = require('../controllers/profile')
 
 const {
   validateUpdateProfile,
-  validateChangePassword
+  validateChangePassword,
+  validateAddConnection
 } = require('../controllers/profile/validators')
 
 /*
@@ -45,6 +48,29 @@ router.patch(
   trimRequest.all,
   validateUpdateProfile,
   updateProfile
+)
+
+/*
+ * Add connection route
+ */
+router.post(
+  '/connection',
+  requireAuth,
+  roleAuthorization(['user', 'admin']),
+  trimRequest.all,
+  validateAddConnection,
+  addConnection
+)
+
+/*
+ * Add connection route
+ */
+router.get(
+  '/connections',
+  requireAuth,
+  roleAuthorization(['user', 'admin']),
+  trimRequest.all,
+  getConnections
 )
 
 /*
