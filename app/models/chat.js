@@ -20,8 +20,8 @@ const chatSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['sent', 'sending', 'seen'],
-    required: true,
+    enum: ['uploading','sent', 'sending', 'seen'],
+    default: 'uploading',
   },
   linkedMessage: {
     type: mongoose.Schema.Types.ObjectId,
