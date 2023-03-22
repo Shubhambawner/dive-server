@@ -22,8 +22,13 @@ const addConnection = async (req, res) => {
       return;
     }
     res.status(200).json(await Promise.all([
-      updateProfileInDB({ $addToSet: { connections: connectionId } }, id),
-      updateProfileInDB({ $addToSet: { connections: id } }, connectionId)
+      //? no way to find out was it added to set, or already existed in there, as api returns modified document...
+      updateProfileInDB({ $addToSet: { connections: connectionId } }, id, true).then(response => {
+        return response.connections.indexOf(connectionId) >= 0 ? { code: 304, message: 'YOU_ALREADY_ADDED' } : response
+      }),
+      updateProfileInDB({ $addToSet: { connections: id } }, connectionId, true).then(response => {
+        return response.connections.indexOf(id) >= 0 ? { code: 304, message: 'YOU_WERE_ALREADY_ADDED' } : response
+      })
     ]))
   } catch (error) {
     handleError(res, error)
