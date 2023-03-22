@@ -6,17 +6,18 @@ const { itemNotFound } = require('../../../middleware/utils')
  * @param {Object} req - request object
  * @param {string} id - user id
  */
-const updateProfileInDB = (req = {}, id = '') => {
+const updateProfileInDB = (req = {}, id = '', returnNew = false) => {
   return new Promise((resolve, reject) => {
     User.findByIdAndUpdate(
       id,
       req,
       {
-        new: true,
+        new: returnNew,
         runValidators: true,
-        select: '-role -_id -updatedAt -createdAt'
+        select: '-role -_id -updatedAt -createdAt ',
       },
-      async (err, user) => {
+      async (err, user, res) => {
+        console.log('33333', res);
         try {
           await itemNotFound(err, user, 'NOT_FOUND')
           resolve(user)
