@@ -11,6 +11,10 @@ const i18n = require('i18n')
 const initMongo = require('./config/mongo')
 const path = require('path')
 
+const http = require('http');
+const server = http.createServer(app);
+const setupSocket = require('./app/socket.io')
+
 // Setup express server port from ENV, default: 3000
 app.set('port', process.env.PORT || 3000)
 
@@ -68,7 +72,10 @@ app.set('views', path.join(__dirname, 'views'))
 app.engine('html', require('ejs').renderFile)
 app.set('view engine', 'html')
 app.use(require('./app/routes'))
-app.listen(app.get('port'))
+server.listen(app.get('port'))
+
+// set up socket.io full duplex chat app with server
+setupSocket(server)
 
 // Init MongoDB
 initMongo()
