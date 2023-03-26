@@ -20,7 +20,7 @@ const chatSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['uploading','sent', 'sending', 'seen'],
+    enum: ['uploading', 'unseen', 'seen'],
     default: 'uploading',
   },
   linkedMessage: {
@@ -41,7 +41,11 @@ const chatSchema = new mongoose.Schema({
     type: String,
     enum: ['important', 'favourite', 'useful'],
   },
-}, { timestamps: true });
+  seenAt:{
+    type: Date
+  }
+
+}, { timestamps: true, strict: 'throw'  });
 
 chatSchema.plugin(mongoosePaginate);
 
