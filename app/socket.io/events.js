@@ -10,9 +10,7 @@ module.exports = {
   USER: {
     NOW_OFFLINE: 'user:now_offline',//client listning, server emitting
     NOW_ONLINE: 'user:now_online',//client listning, server emitting
-  },
-  USERS:{
-    ONLINE:'users:online'//client listning, server emitting
+    INIT:'user:init' // client listning, server emitting
   }
 }
 /**

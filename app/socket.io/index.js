@@ -1,10 +1,11 @@
 const socketio = require('socket.io');
 // Wrap middleware for Socket.IO
-const wrapMiddlewareForSocketIo = middleware => (socket, next) => middleware(socket.request, {}, next);
+const wrapMiddlewareForSocketIo = middleware => (socket, next) => middleware(socket.request, {}, next, socket);
 const passport = require('passport');
 const Chat = require('./../models/chat');
 const events = require('./events')
 const { handleError, isIDGood } = require('../middleware/utils');
+const { getUnseenMessagesFromDB, getConnectionsFromDB } = require('./../controllers/profile/helpers/index')
 const clients = {}
 /**
  *
@@ -16,9 +17,11 @@ module.exports = function setupSocket(server) {
 
     // Use Passport to initialize and authenticate user
     io.use(wrapMiddlewareForSocketIo(passport.initialize()));
-    io.use(wrapMiddlewareForSocketIo((req, res, next) => {
-      const authorizationHeader = req.headers['authorization'];
-      console.log('received: ', authorizationHeader);
+    io.use(wrapMiddlewareForSocketIo((req, res, next, socket) => {
+      // const authorizationHeader = req.headers['authorization'];
+      const authorizationHeader = socket.handshake.auth.token;
+
+      // console.log('received: ', authorizationHeader);
       const token = authorizationHeader ? authorizationHeader.split(' ')[1] : null;
       if (!req.body) req.body = { authorization: authorizationHeader }
       if (!req.query) req.query = { authorization: authorizationHeader }
@@ -27,7 +30,9 @@ module.exports = function setupSocket(server) {
     }));
     io.use(wrapMiddlewareForSocketIo((req, res, next) => {
       passport.authenticate('jwt', { session: false }, (err, user, info) => {
+        console.log(err, user, info);
         if (err) {
+          console.log(err);
           return next(err);
         }
         if (!user) {
@@ -47,7 +52,7 @@ module.exports = function setupSocket(server) {
     // console.log('listner got : ', event, args);
     // });
 
-    io.on(events.CONNECTION, (socket) => {
+    io.on(events.CONNECTION, async (socket) => {
       console.log('connection established with: ', socket.request.user.name);
       // active user
       const user = socket.request.user
@@ -59,15 +64,24 @@ module.exports = function setupSocket(server) {
         })
       } else {
         //notifyOnlineUsers
-        let onlineUsers = []
-        user.connections.forEach(connection => {
-          if (clients[connection]) {
-            clients[connection].emit(events.USER.NOW_ONLINE, user._id)
-            onlineUsers.push(clients[connection].request.user._id)
+        let allConnecitons = await getConnectionsFromDB(user._id)
+        allConnecitons = allConnecitons.connections
+        console.log(allConnecitons);
+        let allConnectionsData = {}
+        allConnecitons.forEach(connection => {
+          let connectionId = connection._id
+          allConnectionsData[connectionId] = { ...connection._doc, messages: [], status: 'offline' }
+          if (clients[connectionId]) {
+            clients[connectionId].emit(events.USER.NOW_ONLINE, user._id)
+            allConnectionsData[connectionId].status = 'online'
           }
+        });
+        let unseenMessages = await getUnseenMessagesFromDB(user._id)
+        unseenMessages.forEach(message => {
+          allConnectionsData[message.senderId].messages.push(message)
         })
         clients[user._id] = socket;
-        socket.emit(events.USERS.ONLINE, onlineUsers)
+        socket.emit(events.USER.INIT, allConnectionsData)
       }
 
       // Listen for chat message events
@@ -120,23 +134,24 @@ module.exports = function setupSocket(server) {
         try {
           messageId = await isIDGood(message._id)
           updatedChat = await Chat.findOneAndUpdate(
-            { _id: message, status: 'unseen' },
+            { _id: message, status: 'unseen', receiverId: user._id },
             { $set: { status: 'seen', seenAt: Date.now() } },
             { returnDocument: 'after' }
           )
+
+
+          //if sender is online, send event chat:seen to him
+          let senderId = await isIDGood(message.senderId)
+          if (!updatedChat) {
+            socket.emit('error', { message: 'no received message with given _id and unseen status found!' })
+            return;
+          }
+          if (clients[senderId] && updatedChat) {
+            clients[senderId].emit(events.CHAT.SEEN, updatedChat)
+          }
         } catch (error) {
           console.error(error);
           socket.emit('error', error)
-        }
-
-        //if sender is online, send event chat:seen to him
-        let senderId = await isIDGood(message.senderId)
-        if (!updatedChat) {
-          socket.emit('error', { message: 'no message with given _id and unseen status found!' })
-          return;
-        }
-        if (clients[senderId] && updatedChat) {
-          clients[senderId].emit(events.CHAT.SEEN, updatedChat)
         }
       })
 

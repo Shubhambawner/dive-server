@@ -20,6 +20,7 @@ const jwtExtractor = (req) => {
   if (token) {
     // Decrypts token
     token = auth.decrypt(token)
+    console.log('received token: ', token);
   }
   return token
 }
@@ -40,6 +41,7 @@ const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
     if (err) {
       return done(err, false)
     }
+    // console.log(user, jwtOptions);
     return !user ? done(null, false) : done(null, user)
   })
 })
