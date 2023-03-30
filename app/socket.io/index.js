@@ -36,7 +36,7 @@ module.exports = function setupSocket(server) {
           return next(err);
         }
         if (!user) {
-          return next(new Error('Unauthorized'));
+          return next(new Error(info.message) || 'Unauthorized');
         }
         req.user = user;
         return next();
