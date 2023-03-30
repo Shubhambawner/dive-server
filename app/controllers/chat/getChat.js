@@ -19,6 +19,11 @@ const getChat = async (req, res) => {
         { senderId: req.user._id, receiverId: userId },
       ]
     }
+    if (req.query.lastMessageId && req.query.lastMessageId!='undefined') {
+      console.log('msss', req.query.lastMessageId);
+      const lastMessageId = await isIDGood(req.query.lastMessageId)
+      query['_id'] = {$lt:lastMessageId}
+    }
     res.status(200).json(await getItems(req, Chat, query))
   } catch (error) {
     handleError(res, error)
