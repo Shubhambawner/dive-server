@@ -13,9 +13,6 @@ const {
   getChat,
 } = require('../controllers/chat')
 
-const {
-  validateGetChat,
-} = require('../controllers/chat/validators')
 
 /*
  * Chat routes

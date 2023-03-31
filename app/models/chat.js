@@ -41,11 +41,15 @@ const chatSchema = new mongoose.Schema({
     type: String,
     enum: ['important', 'favourite', 'useful'],
   },
-  seenAt:{
+  seenAt: {
     type: Date
-  }
+  },
+  type: {
+    type: String,
+    enum: ['message', 'patient'],
+  },
 
-}, { timestamps: true, strict: 'throw'  });
+}, { timestamps: true, strict: 'throw' });
 
 chatSchema.plugin(mongoosePaginate);
 

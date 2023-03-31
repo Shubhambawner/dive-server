@@ -1,8 +1,6 @@
 const Chat = require('../../models/chat')
 const { getItems } = require('../../middleware/db')
 const { isIDGood, handleError } = require('../../middleware/utils')
-const { matchedData } = require('express-validator')
-const { getLatestChatFromDB, getLatestChatBeforeFromDB } = require('./helpers')
 
 /**
  * get item function called by route
