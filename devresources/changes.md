@@ -28,5 +28,6 @@ profile: barebones, only takes data from localstorage and displays on page... no
    ram cleard
    all online connections receive news of him getting offline
 
-
-
+7. after messaging section is opened, auto selects 1st connection as active, loads 10 chats initially
+8. load more chats button to load older chats in chat area implemented...
+9. quickly change backend url for admin pannel frontend to dev/prod in public constants.js: changed js to es6 modules, and created module constants in frontend where changing env is possible
