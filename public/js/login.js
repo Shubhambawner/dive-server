@@ -1,3 +1,5 @@
+import { serverUrl } from './constants.js';
+
 document.querySelector("button#login").onclick = async function () {
   let email = document.querySelector(".login-form #email").value
   let password = document.querySelector(".login-form #password").value
@@ -17,10 +19,8 @@ document.querySelector("button#login").onclick = async function () {
     redirect: 'manual'
   };
 
-  let url_prod = "https://dive-server.shubhambawner.repl.co/"
-  let url_dev = "http://localhost:3000/"
 
-  fetch(url_dev + 'login', requestOptions)
+  fetch(serverUrl + 'login', requestOptions)
     .then(response => response.json())
     .then(result => {
       console.log(result);
