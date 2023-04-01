@@ -4,6 +4,8 @@ const wrapMiddlewareForSocketIo = middleware => (socket, next) => middleware(soc
 const passport = require('passport');
 const Chat = require('./../models/chat');
 const events = require('./events')
+const addPatientevents = require('./events/patient')
+
 const { handleError, isIDGood } = require('../middleware/utils');
 const { getUnseenMessagesFromDB, getConnectionsFromDB } = require('./../controllers/profile/helpers/index')
 const clients = {}
@@ -70,7 +72,7 @@ module.exports = function setupSocket(server) {
         let allConnectionsData = {}
         allConnecitons.forEach(connection => {
           let connectionId = connection._id
-          allConnectionsData[connectionId] = { ...connection._doc, messages: [], status: 'offline' }
+          allConnectionsData[connectionId] = { ...connection._doc, messages: [], PatientsList: {}, status: 'offline' }
           if (clients[connectionId]) {
             clients[connectionId].emit(events.USER.NOW_ONLINE, user._id)
             allConnectionsData[connectionId].status = 'online'
@@ -154,6 +156,8 @@ module.exports = function setupSocket(server) {
           socket.emit('error', error)
         }
       })
+
+      addPatientevents(socket, user)
 
       // Remove client from the clients object when they disconnect
       socket.on(events.DISCONNECT, () => {

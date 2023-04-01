@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
 
-const chatSchema = new mongoose.Schema({
+const patientSchema = new mongoose.Schema({
   senderId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -14,22 +14,15 @@ const chatSchema = new mongoose.Schema({
     required: true,
     index: true,
   },
-  message: {
-    type: String,
+  //todo add patient schema from frontend
+  data: {
+    type: Object,
     required: true,
   },
   status: {
     type: String,
     enum: ['uploading', 'unseen', 'seen'],
     default: 'uploading',
-  },
-  linkedMessage: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Chat',
-  },
-  linkedPatient: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Patient',
   },
   deleted: {
     type: Boolean,
@@ -43,17 +36,18 @@ const chatSchema = new mongoose.Schema({
   seenAt: {
     type: Date
   }
+
 }, { timestamps: true, strict: 'throw' });
 
-chatSchema.plugin(mongoosePaginate);
+patientSchema.plugin(mongoosePaginate);
 
-const Chat = mongoose.model('Chat', chatSchema);
+const Patient = mongoose.model('Patient', patientSchema);
 
-module.exports = Chat;
+module.exports = Patient;
 
 
 /**
- * const Chat = require('./chatModel');
+ * const Patient = require('./patientModel');
 
 const options = {
   page: 1,
@@ -61,7 +55,7 @@ const options = {
   sort: { createdAt: 'desc' },
 };
 
-Chat.paginate({ senderId: userId1, receiverId: userId2 }, options)
+Patient.paginate({ senderId: userId1, receiverId: userId2 }, options)
   .then((result) => {
     console.log(result.docs);
     console.log(result.total);
