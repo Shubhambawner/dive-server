@@ -1,10 +1,16 @@
 const Patient = require('./../../models/patient');
 const events = require('./../events')
 
-module.exports =  function addPatientEvents(socket){
+module.exports = function addPatientEvents(socket, user) {
   // Listen for patient patient events
   socket.on(events.PATIENT.SHARE, (patientData) => {
     console.log(patientData);
+    if (!patientData) {
+      socket.emit('error', {
+        'message': 'DATA_NOT_GIVEN'
+      })
+      return;
+    }
     patientData['senderId'] = user._id
     patientData['status'] = 'unseen'
     const patient = new Patient(patientData)
