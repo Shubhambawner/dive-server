@@ -1,4 +1,4 @@
-import { serverUrl } from './constants.js';
+let serverUrl = window.config.FRONTEND_URL
 
 document.querySelector("button#login").onclick = async function () {
   let email = document.querySelector(".login-form #email").value

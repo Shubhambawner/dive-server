@@ -1,4 +1,5 @@
-import { serverUrl } from './constants.js';
+let serverUrl = window.config.FRONTEND_URL
+
 let token = localStorage.getItem(`authentication`)
 
 const tableBody = document.querySelector("#dataTable tbody");
@@ -91,7 +92,7 @@ const deleteUser = (user) => {
 
 const updateRole = (user, role = "user", callbackFn) => {
   var myHeaders = new Headers();
-  myHeaders.append("Authorization", "Bearer 4fcf3f78138f61fe6273dbd1d6c05f15e30496d7a085919bbcdcf11f271dcecfb564cd09ae8877ede8f0b29ede2a1cbfdadcfaa5941cade30d7da165a884f3cb4b395e8bd3c68a92757ff7e2ade2d23cb98a0dc6f040e42bc05a6b4304f212deea871e72933df531118f26a4800d482fd5df238d02767fe2dd4b2938222a16455462ef294cb14c3af17a7b0223034afa464326184fe925682780241db8f976762362703cc78640a93754531d753e8fd1eee511814d4d63dbc95dfa0027af978b");
+  myHeaders.append("Authorization", "Bearer " + token);
   myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
   let { name, email, phone, city, country } = user
