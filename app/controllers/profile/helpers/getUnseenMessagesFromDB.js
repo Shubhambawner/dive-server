@@ -14,7 +14,7 @@ const getUnseenMessagesFromDB = async (userId = '') => {
       status: 'unseen'
     }
     let data = await getItems({query:{page:1,limit:100}}, Chat, query)
-    return data.docs || []
+    return data.docs.reverse() || []
   } catch (error) {
     console.error(error);
     return []
