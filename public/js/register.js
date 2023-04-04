@@ -23,7 +23,7 @@ document.querySelector("button#register").onclick = async function () {
   };
 
 
-  fetch(serverUrl + 'register', requestOptions)
+  fetch(serverUrl + '/register', requestOptions)
     .then(response => response.json())
     .then(result => {
       console.log(result);

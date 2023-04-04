@@ -20,7 +20,7 @@ document.querySelector("button#login").onclick = async function () {
   };
 
 
-  fetch(serverUrl + 'login', requestOptions)
+  fetch(serverUrl + '/login', requestOptions)
     .then(response => response.json())
     .then(result => {
       console.log(result);

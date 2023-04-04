@@ -29,7 +29,7 @@ let verifyProfile = () => {
   };
 
 
-  fetch(serverUrl + `profile`, requestOptions)
+  fetch(serverUrl + `/profile`, requestOptions)
     .then(response => response.json())
     .then(result => {
       console.log(result)
@@ -83,7 +83,7 @@ const deleteUser = (user) => {
     redirect: 'manual'
   };
 
-  fetch(serverUrl + "users/" + user._id, requestOptions)
+  fetch(serverUrl + "/users/" + user._id, requestOptions)
     .then(response => response.text())
     .then(result => { console.log(result); window.location.reload() })
     .catch(error => console.log('error', error));
@@ -112,7 +112,7 @@ const updateRole = (user, role = "user", callbackFn) => {
     redirect: 'manual'
   };
 
-  fetch(serverUrl + "users/" + user._id, requestOptions)
+  fetch(serverUrl + "/users/" + user._id, requestOptions)
     .then(response => response.json())
     .then(result => callbackFn(result))
     .catch(error => console.log('error', error));
@@ -182,7 +182,7 @@ function fetchData(page) {
     redirect: `manual`
   };
 
-  fetch(`${serverUrl + `users`}?page=${page}&limit=10&sort=createdAt&order=-1`, requestOptions)
+  fetch(`${serverUrl + `/users`}?page=${page}&limit=10&sort=createdAt&order=-1`, requestOptions)
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
