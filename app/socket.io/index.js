@@ -4,10 +4,12 @@ const wrapMiddlewareForSocketIo = middleware => (socket, next) => middleware(soc
 const passport = require('passport');
 const Chat = require('./../models/chat');
 const events = require('./events')
-const addPatientevents = require('./events/patient')
+const addPatientEvents = require('./events/patient')
 
 const { handleError, isIDGood } = require('../middleware/utils');
 const { getUnseenMessagesFromDB, getConnectionsFromDB } = require('./../controllers/profile/helpers/index')
+
+//todo explore possiblities of redis for this clients object...
 const clients = {}
 /**
  *
@@ -24,7 +26,6 @@ module.exports = function setupSocket(server) {
       const authorizationHeader = socket.handshake.auth.token;
 
       // console.log('received: ', authorizationHeader);
-      const token = authorizationHeader ? authorizationHeader.split(' ')[1] : null;
       if (!req.body) req.body = { authorization: authorizationHeader }
       if (!req.query) req.query = { authorization: authorizationHeader }
       if (!req.headers) req.headers = { authorization: authorizationHeader }
@@ -157,7 +158,7 @@ module.exports = function setupSocket(server) {
         }
       })
 
-      addPatientevents(socket, user)
+      addPatientEvents(socket, user)
 
       // Remove client from the clients object when they disconnect
       socket.on(events.DISCONNECT, () => {

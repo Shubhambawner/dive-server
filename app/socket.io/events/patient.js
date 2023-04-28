@@ -1,3 +1,5 @@
+//untested!
+
 const Patient = require('./../../models/patient');
 const events = require('./../events')
 
